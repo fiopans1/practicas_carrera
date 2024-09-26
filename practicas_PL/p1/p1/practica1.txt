@@ -1,0 +1,40 @@
+Diego Suárez Ramos : diego.suarez.ramos@udc.es
+
+ENUNCIADO DE LA PRÁTICA:
+Diseño e implementación mediante FLEX de un analizador estadístico de 
+textos, de forma que dado un fichero de texto de entrada muestre el número total de 
+caracteres que lo componen (sin contar los espacios en blanco ni los tabuladores), el 
+número total de palabras (secuencias de caracteres que no posean ni espacios ni 
+tabuladores), el número de palabras en mayúscula (todos los caracteres), el número de 
+palabras en minúscula (todos los caracteres), el número de palabras numéricas (todos los 
+caracteres son dígitos) y el número de frases (secuencias de palabras finalizadas por “.”). Es 
+preciso que el analizador reconozca cualquier tipo de palabra, no es necesario que éstas 
+tengan sentido, por ejemplo, la cadena a2ki?-)7 sería una palabra válida
+
+
+IMPLEMENTACIÓN DEL PROGRAMA:
+Declaramos al principio de todo todas las variables necesarias, una por cada contador necesario y 
+además a mayores tenemos un contador del total de palabras del texto.
+En cada regla reconocemos cada palabra/frase y aumentamos su contador, el número de palabras y el número
+total de caracteres haciendo uso de la variable yyleng incluida en el propio FLEX, en resumen tendremos
+una regla por cada tipo de palabra que queramos reconocer.
+Al final de todo hacemos un print de cada variable mostrando el resultado.
+
+El resultado del ejemplo proporcionado es el siguiente:
+
+Numero de caracteres: 54
+Numero de palabras: 12
+Numero de palabras raras: 5
+Numero de palabras mayusculas: 1
+Numero de palabras minusculas: 4
+Numero de palabras numericas: 2
+Numero de frases: 2
+
+
+CURIOSIDADES:
+Esta práctica ha sido desarrollada en MACOS, de usarse un sistema operativo diferente debe cambiarse en el MakeFile
+la librería usada.
+
+Tenemos un contador de palabras totales del archivo
+
+Usamos los puntos como reconocedor de fin de frase

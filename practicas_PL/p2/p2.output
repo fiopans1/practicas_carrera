@@ -1,0 +1,321 @@
+Grammar
+
+    0 $accept: S $end
+
+    1 S: CABECERA
+    2  | CABECERA cuerpo
+    3  | CABECERA TEXTO cuerpo
+    4  | cuerpo
+
+    5 cuerpo: ETIQUETA_APERTURA contenido ETIQUETA_CIERRE
+    6       | ETIQUETA_APERTURA contenido ETIQUETA_CIERRE contenido
+
+    7 contenido: data
+    8          | data contenido
+    9          | error
+
+   10 data: ETIQUETA_APERTURA ETIQUETA_CIERRE
+   11     | ETIQUETA_APERTURA contenido ETIQUETA_CIERRE TEXTO ETIQUETA_APERTURA
+   12     | ETIQUETA_APERTURA contenido ETIQUETA_CIERRE
+   13     | ETIQUETA_ERROR_APERTURA
+   14     | ETIQUETA_ERROR_CIERRE
+   15     | TEXTO
+
+
+Terminals, with rules where they appear
+
+$end (0) 0
+error (256) 9
+ETIQUETA_APERTURA (258) 5 6 10 11 12
+ETIQUETA_CIERRE (259) 5 6 10 11 12
+TEXTO (260) 3 11 15
+CABECERA (261) 1 2 3
+ETIQUETA_ERROR_CIERRE (262) 14
+ETIQUETA_ERROR_APERTURA (263) 13
+
+
+Nonterminals, with rules where they appear
+
+$accept (9)
+    on left: 0
+S (10)
+    on left: 1 2 3 4, on right: 0
+cuerpo (11)
+    on left: 5 6, on right: 2 3 4
+contenido (12)
+    on left: 7 8 9, on right: 5 6 8 11 12
+data (13)
+    on left: 10 11 12 13 14 15, on right: 7 8
+
+
+state 0
+
+    0 $accept: . S $end
+    1 S: . CABECERA
+    2  | . CABECERA cuerpo
+    3  | . CABECERA TEXTO cuerpo
+    4  | . cuerpo
+    5 cuerpo: . ETIQUETA_APERTURA contenido ETIQUETA_CIERRE
+    6       | . ETIQUETA_APERTURA contenido ETIQUETA_CIERRE contenido
+
+    ETIQUETA_APERTURA  shift, and go to state 1
+    CABECERA           shift, and go to state 2
+
+    S       go to state 3
+    cuerpo  go to state 4
+
+
+state 1
+
+    5 cuerpo: ETIQUETA_APERTURA . contenido ETIQUETA_CIERRE
+    6       | ETIQUETA_APERTURA . contenido ETIQUETA_CIERRE contenido
+    7 contenido: . data
+    8          | . data contenido
+    9          | . error
+   10 data: . ETIQUETA_APERTURA ETIQUETA_CIERRE
+   11     | . ETIQUETA_APERTURA contenido ETIQUETA_CIERRE TEXTO ETIQUETA_APERTURA
+   12     | . ETIQUETA_APERTURA contenido ETIQUETA_CIERRE
+   13     | . ETIQUETA_ERROR_APERTURA
+   14     | . ETIQUETA_ERROR_CIERRE
+   15     | . TEXTO
+
+    error                    shift, and go to state 5
+    ETIQUETA_APERTURA        shift, and go to state 6
+    TEXTO                    shift, and go to state 7
+    ETIQUETA_ERROR_CIERRE    shift, and go to state 8
+    ETIQUETA_ERROR_APERTURA  shift, and go to state 9
+
+    contenido  go to state 10
+    data       go to state 11
+
+
+state 2
+
+    1 S: CABECERA .  [$end]
+    2  | CABECERA . cuerpo
+    3  | CABECERA . TEXTO cuerpo
+    5 cuerpo: . ETIQUETA_APERTURA contenido ETIQUETA_CIERRE
+    6       | . ETIQUETA_APERTURA contenido ETIQUETA_CIERRE contenido
+
+    ETIQUETA_APERTURA  shift, and go to state 1
+    TEXTO              shift, and go to state 12
+
+    $default  reduce using rule 1 (S)
+
+    cuerpo  go to state 13
+
+
+state 3
+
+    0 $accept: S . $end
+
+    $end  shift, and go to state 14
+
+
+state 4
+
+    4 S: cuerpo .
+
+    $default  reduce using rule 4 (S)
+
+
+state 5
+
+    9 contenido: error .
+
+    $default  reduce using rule 9 (contenido)
+
+
+state 6
+
+    7 contenido: . data
+    8          | . data contenido
+    9          | . error
+   10 data: . ETIQUETA_APERTURA ETIQUETA_CIERRE
+   10     | ETIQUETA_APERTURA . ETIQUETA_CIERRE
+   11     | . ETIQUETA_APERTURA contenido ETIQUETA_CIERRE TEXTO ETIQUETA_APERTURA
+   11     | ETIQUETA_APERTURA . contenido ETIQUETA_CIERRE TEXTO ETIQUETA_APERTURA
+   12     | . ETIQUETA_APERTURA contenido ETIQUETA_CIERRE
+   12     | ETIQUETA_APERTURA . contenido ETIQUETA_CIERRE
+   13     | . ETIQUETA_ERROR_APERTURA
+   14     | . ETIQUETA_ERROR_CIERRE
+   15     | . TEXTO
+
+    error                    shift, and go to state 5
+    ETIQUETA_APERTURA        shift, and go to state 6
+    ETIQUETA_CIERRE          shift, and go to state 15
+    TEXTO                    shift, and go to state 7
+    ETIQUETA_ERROR_CIERRE    shift, and go to state 8
+    ETIQUETA_ERROR_APERTURA  shift, and go to state 9
+
+    contenido  go to state 16
+    data       go to state 11
+
+
+state 7
+
+   15 data: TEXTO .
+
+    $default  reduce using rule 15 (data)
+
+
+state 8
+
+   14 data: ETIQUETA_ERROR_CIERRE .
+
+    $default  reduce using rule 14 (data)
+
+
+state 9
+
+   13 data: ETIQUETA_ERROR_APERTURA .
+
+    $default  reduce using rule 13 (data)
+
+
+state 10
+
+    5 cuerpo: ETIQUETA_APERTURA contenido . ETIQUETA_CIERRE
+    6       | ETIQUETA_APERTURA contenido . ETIQUETA_CIERRE contenido
+
+    ETIQUETA_CIERRE  shift, and go to state 17
+
+
+state 11
+
+    7 contenido: . data  [$end, ETIQUETA_CIERRE]
+    7          | data .  [$end, ETIQUETA_CIERRE]
+    8          | . data contenido
+    8          | data . contenido
+    9          | . error
+   10 data: . ETIQUETA_APERTURA ETIQUETA_CIERRE
+   11     | . ETIQUETA_APERTURA contenido ETIQUETA_CIERRE TEXTO ETIQUETA_APERTURA
+   12     | . ETIQUETA_APERTURA contenido ETIQUETA_CIERRE
+   13     | . ETIQUETA_ERROR_APERTURA
+   14     | . ETIQUETA_ERROR_CIERRE
+   15     | . TEXTO
+
+    error                    shift, and go to state 5
+    ETIQUETA_APERTURA        shift, and go to state 6
+    TEXTO                    shift, and go to state 7
+    ETIQUETA_ERROR_CIERRE    shift, and go to state 8
+    ETIQUETA_ERROR_APERTURA  shift, and go to state 9
+
+    $end             reduce using rule 7 (contenido)
+    ETIQUETA_CIERRE  reduce using rule 7 (contenido)
+
+    contenido  go to state 18
+    data       go to state 11
+
+
+state 12
+
+    3 S: CABECERA TEXTO . cuerpo
+    5 cuerpo: . ETIQUETA_APERTURA contenido ETIQUETA_CIERRE
+    6       | . ETIQUETA_APERTURA contenido ETIQUETA_CIERRE contenido
+
+    ETIQUETA_APERTURA  shift, and go to state 1
+
+    cuerpo  go to state 19
+
+
+state 13
+
+    2 S: CABECERA cuerpo .
+
+    $default  reduce using rule 2 (S)
+
+
+state 14
+
+    0 $accept: S $end .
+
+    $default  accept
+
+
+state 15
+
+   10 data: ETIQUETA_APERTURA ETIQUETA_CIERRE .
+
+    $default  reduce using rule 10 (data)
+
+
+state 16
+
+   11 data: ETIQUETA_APERTURA contenido . ETIQUETA_CIERRE TEXTO ETIQUETA_APERTURA
+   12     | ETIQUETA_APERTURA contenido . ETIQUETA_CIERRE
+
+    ETIQUETA_CIERRE  shift, and go to state 20
+
+
+state 17
+
+    5 cuerpo: ETIQUETA_APERTURA contenido ETIQUETA_CIERRE .  [$end]
+    6       | ETIQUETA_APERTURA contenido ETIQUETA_CIERRE . contenido
+    7 contenido: . data
+    8          | . data contenido
+    9          | . error
+   10 data: . ETIQUETA_APERTURA ETIQUETA_CIERRE
+   11     | . ETIQUETA_APERTURA contenido ETIQUETA_CIERRE TEXTO ETIQUETA_APERTURA
+   12     | . ETIQUETA_APERTURA contenido ETIQUETA_CIERRE
+   13     | . ETIQUETA_ERROR_APERTURA
+   14     | . ETIQUETA_ERROR_CIERRE
+   15     | . TEXTO
+
+    error                    shift, and go to state 5
+    ETIQUETA_APERTURA        shift, and go to state 6
+    TEXTO                    shift, and go to state 7
+    ETIQUETA_ERROR_CIERRE    shift, and go to state 8
+    ETIQUETA_ERROR_APERTURA  shift, and go to state 9
+
+    $end  reduce using rule 5 (cuerpo)
+
+    contenido  go to state 21
+    data       go to state 11
+
+
+state 18
+
+    8 contenido: data contenido .
+
+    $default  reduce using rule 8 (contenido)
+
+
+state 19
+
+    3 S: CABECERA TEXTO cuerpo .
+
+    $default  reduce using rule 3 (S)
+
+
+state 20
+
+   11 data: ETIQUETA_APERTURA contenido ETIQUETA_CIERRE . TEXTO ETIQUETA_APERTURA
+   12     | ETIQUETA_APERTURA contenido ETIQUETA_CIERRE .  [$end, error, ETIQUETA_APERTURA, ETIQUETA_CIERRE, ETIQUETA_ERROR_CIERRE, ETIQUETA_ERROR_APERTURA]
+
+    TEXTO  shift, and go to state 22
+
+    $default  reduce using rule 12 (data)
+
+    Conflict between rule 12 and token TEXTO resolved as shift (%right TEXTO).
+
+
+state 21
+
+    6 cuerpo: ETIQUETA_APERTURA contenido ETIQUETA_CIERRE contenido .
+
+    $default  reduce using rule 6 (cuerpo)
+
+
+state 22
+
+   11 data: ETIQUETA_APERTURA contenido ETIQUETA_CIERRE TEXTO . ETIQUETA_APERTURA
+
+    ETIQUETA_APERTURA  shift, and go to state 23
+
+
+state 23
+
+   11 data: ETIQUETA_APERTURA contenido ETIQUETA_CIERRE TEXTO ETIQUETA_APERTURA .
+
+    $default  reduce using rule 11 (data)

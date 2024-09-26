@@ -1,0 +1,39 @@
+Diego Suárez Ramos : diego.suarez.ramos@udc.es
+
+ENUNCIADO DE LA PRÁTICA:
+ Diseño e implementación mediante FLEX y BISON de un validador simple de 
+la sintaxis de un fichero XML. El analizador recibirá como entrada un fichero en formato 
+texto y devolverá como salida el resultado de la validación. Si el fichero cumple con el 
+formato XML se indicará que es correcto y en otro caso se mostrará que el fichero no es 
+correcto y el número de línea en el que se ha detectado el error. También se mostrará 
+información sobre el tipo de error producido (ejemplos de errores: falta una etiqueta, 
+sintaxis incorrecta en el formato de las etiquetas, falta la línea de cabecera, etc.). Para 
+simplificar la práctica, solo será necesario contemplar la sintaxis de ficheros simples (sin 
+ficheros DTD o Schema, y sin atributos en las etiquetas XML) y el validador terminará su 
+análisis al encontrar el primer error 
+
+IMPLEMENTACIÓN DEL PROGRAMA:
+La implementación del lexer no tiene mucho misterio, en ella reconocemos los diferentes elementos de un XML y devolvemos sus tokens
+correspondientes, donde viene lo interesante es el el archivo .y, en donde tenemos las reglas sintácticas. Empezamos en la regla s
+que nos sirve para ver si tenemos cabecera o no, si tenemos ok y pasamos a la regla de cuerpo, sino da error, en la regla de cuerpo
+comprobamos que solo tengamos un tag raíz sino saltará error, y luego tenemos las reglas de contenido y data que es donde vamos
+reconociendo los distintos tokens y conjuntos de tokens que puede tener un archivo XML y donde decidimos si está todo bien o si algún
+conjunto de tokens no tiene el orden o la sintaxis correcta y por lo tanto debe saltar un error, el cual se imprimirá en caso de que
+suceda.
+
+En los ejemplos vamos a tener los siguientes (dentro de la carpeta ejemplos_XML):
+faltaabriretiqueta.xml -> en el tenemos una etiqueta sin abrir con <
+faltacerraretiqueta.xml -> en el tenemos una etiqueta sin cerrar con >
+faltaunaetiqueta.xml -> tenemos un tag abierto con <TEXTO> pero falta cerrarlo con </TEXTO>
+nohayunsolotagraiz.xml -> no tenemos un solo tag raíz
+sincabecera.xml -> no hay cabecera
+textoentrecerrarabriretiqueta.xml -> tenemos un texto entre un tag de cerrar y uno de abrir
+todobien.xml -> todo el archivo esta correcto
+
+
+CURIOSIDADES:
+Esta práctica ha sido desarrollada en MACOS, de usarse un sistema operativo diferente debe cambiarse en el MakeFile
+la librería usada.
+
+Teníamos un problema de conflictos entre 2 reglas porque el programa no sabía entre cuales escoger, por lo tanto usamos la función de 
+%left para darle prioridad a la que reducía con mayor cantidad de tokens
