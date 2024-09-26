@@ -1,0 +1,29 @@
+
+Diego Suárez Ramos : diego.suarez.ramos@udc.es
+
+MEMORIA VA P2:
+
+1-Separar y segmentar cada una de las plantas, hasta un máximo de 5 × 4 por bandeja.
+
+En esta sección, se ha desarrollado una metodología en dos fases. En la primera fase, se lleva a cabo la separación de las plantas del fondo, mientras que en la segunda fase, se divide la imagen principal en 20 imágenes, una por cada bandeja.
+
+Para la primera parte del proceso, se procede a descomponer la imagen RGB en sus tres componentes de color. Se selecciona el canal rojo, ya que resalta el fondo y minimiza la presencia de las plantas. Posteriormente, se aplica una umbralización con dicho color para binarizar la imagen, utilizando el primer parámetro, denominado "umbral1". Luego, se realiza una operación lógica AND en la imagen resultante para conservar únicamente los píxeles correspondientes al fondo. A continuación, se resta esta imagen del fondo a la imagen original, eliminando así la parte del fondo. Este proceso se repite al umbralizar con uno de los colores de la imagen original, aplicando una operación AND lógica para resaltar las plantas. Este paso se realiza dos veces, utilizando los umbrales "umbral2" y "umbral3" con los colores verde y rojo respectivamente.
+
+Para finalizar la primera fase, la imagen se convierte al espacio de color HSV y se selecciona la segunda pista de saturación sin aplicar ningún umbral. Se realiza una operación AND lógica con la imagen original para obtener únicamente las plantas. Durante este proceso, se invoca la función "borrar_ruido" para eliminar puntos del fondo que no cumplen con un tamaño mínimo de píxeles. Además, se aplica una operación de apertura seguida de un cierre morfológico con un kernel de tamaño variable, un parámetro seleccionable, para eliminar restos pequeños del fondo y rellenar huecos en las hojas.
+
+En la segunda parte del algoritmo, se toma la imagen resultante del proceso anterior, se recortan ligeramente los bordes para enfocarse en la bandeja, y se divide la imagen en 4 filas y 5 columnas. Cada fragmento de esta matriz se guarda como una imagen individual. Este procedimiento se realiza debido a que todas las imágenes mantienen la misma resolución y posición.
+
+PROBLEMAS Y SOLUCIONES ENCONTRADOS:
+-Se solapan algunas plantas en algunas imágenes: Esto se decidió que en caso de que pasase se cortara cada planta por su bandeja aunque esto implique
+cortarle parte de las hojas.
+-Bandejas vacías= Algunas de las bandejas no contienen plantas porque estas no crecieron, cosa que podríamos obviar estas imágenes, pero como en algunos
+casos en estas bandejas aparecen hojas de las plantas cercanas no se eliminaron...en caso de no querer analizarlas a posteriori sería tan sencillo
+como eliminar las imágenes en negro de la carpeta intermedio que produce este primer apartado para que no se analicen en el siguiente apartado.
+
+
+2- Para cada una de las plantas, segmentar cada una de sus hojas por separado.
+Para llevar a cabo este proceso, inicialmente aplicamos una variante más sofisticada de la ecualización del histograma conocida como CLAHE. Esta técnica opera mediante áreas de influencia y límites de cambio, destacando especialmente los bordes, lo cual es crucial para resaltar los contornos de las hojas.
+
+Tras este breve preprocesamiento, empleamos SAM, una inteligencia artificial desarrollada por Meta, que ha sido entrenada con millones de máscaras y se destaca como una de las tecnologías líderes en la segmentación de imágenes en la actualidad. SAM proporciona como resultado del análisis una lista de máscaras binarias que representan los diversos objetos detectados por la inteligencia artificial. Posteriormente, llevamos a cabo una pequeña limpieza entre las máscaras para eliminar aquellas asociadas con fondos en negro o pequeños puntos de ruido, conservando únicamente las máscaras correspondientes a las hojas.
+
+Finalmente, utilizamos un método de la librería "supervision", que ya viene preparada con métodos para trabajar conjunto a esta inteligencia artificial. Este método, al recibir la imagen original de la planta, se encarga de dibujar cada objeto para el cual disponemos de una máscara, asignándole un color específico. Este nos proporciona una visión de cada hoja que detectó nuestro algoritmo.
