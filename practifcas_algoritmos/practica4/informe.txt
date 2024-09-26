@@ -1,0 +1,111 @@
+AUTORES:
+	Diego Suarez Ramos : diego.suarez.ramos@udc.es
+	Ander Varela Martin : ander.varela@udc.es
+	Brais Rodruiguez Gonzalez : brais.rodriguez.gonzalez@udc.es
+
+En este informe vamos aportamos toda la información obtenida al analizar
+y medir el algoritmo pedido en la practica 4 de la asignatura de algoritmos:
+
+
+ALGORITMO DE PRIM:
+
+	El algoritmo de Prim es un algoritmo perteneciente a la teoría de los grafos para
+	encontrar un árbol recubridor mínimo en un grafo conexo, no dirigido y cuyas
+	aristas están etiquetadas. En otras palabras, el algoritmo encuentra un
+	subconjunto de aristas que forman un árbol con todos los vértices, donde el peso
+	total de todas las aristas en el árbol es el mínimo posible. Si el grafo no es
+	conexo, entonces el algoritmo encontrará el árbol recubridor mínimo para uno de
+	los componentes conexos que forman dicho grafo no conexo.
+	El algoritmo podría ser informalmente descrito siguiendo los siguientes pasos:
+
+		1-	Inicializar un árbol con un único vértice, elegido arbitrariamente
+			del grafo.
+
+		2-	Aumentar el árbol por un lado. Llamamos lado a la unión entre dos
+			vértices: de las posibles uniones que pueden conectar el árbol a
+			los vértices que no están aún en el árbol, encontrar el lado de
+			menor distancia y unirlo al árbol.
+
+		3-	Repetir el paso 2 (hasta que todos los vértices pertenezcan al
+			árbol)
+
+	A continuación vamos a hacer un estudio del algoritmo en el escenario donde todos
+	los grafos son completos no dirigidso y generados de manera aleatoria.
+
+	Todas las unidades de tiempo tratadas a continuación están en microsegundos
+	µs(10^-6), y las n hacen referencia al número de elementos del vector.
+
+
+
+ORDENADOR UTILIZADO PARA LAS PRUEBAS:
+
+	Arquitectura:                        x86_64
+	modo(s) de operación de las CPUs:    32-bit, 64-bit
+	Orden de los bytes:                  Little Endian
+	Address sizes:                       43 bits physical, 48 bits virtual
+	CPU(s):                              8
+	Lista de la(s) CPU(s) en línea:      0-7
+	Hilo(s) de procesamiento por núcleo: 2
+	Núcleo(s) por «socket»:              4
+	«Socket(s)»                          1
+	Modo(s) NUMA:                        1
+	ID de fabricante:                    AuthenticAMD
+	Familia de CPU:                      23
+	Modelo:                              24
+	Nombre del modelo:                   AMD Ryzen 5 3550H with Radeon Vega Mobile G
+	                                     fx
+	Revisión:                            1
+	Frequency boost:                     enabled
+	CPU MHz:                             1700.000
+	CPU MHz máx.:                        2100,0000
+	CPU MHz mín.:                        1400,0000
+	BogoMIPS:                            4191.82
+	Virtualización:                      AMD-V
+	Caché L1d:                           128 KiB
+	Caché L1i:                           256 KiB
+	Caché L2:                            2 MiB
+	Caché L3:                            4 MiB
+	RAM:                                 16 GB
+
+
+ALGORITMO DE PRIM CON INICIALIZACIÓN ALEATORIA:
+
+	             n          t(n)       t(n)/n^1.80      t(n)/n^2.00      t(n)/n^2.20
+	(*)          10          0.515       0.008162       0.005150       0.003249
+	(*)          20          2.361       0.010746       0.005903       0.003242
+	(*)          40          9.602       0.012550       0.006001       0.002870
+	(*)          80         38.315       0.014382       0.005987       0.002492
+	(*)         160        151.055       0.016282       0.005901       0.002138
+	            320        628.000       0.019440       0.006133       0.001935
+	            640       2498.000       0.022206       0.006099       0.001675
+
+
+	(*):	Tiempo promedio de 1000 ejecuciones del algoritmo, se usa cuendo se obtiene
+		un tiempo de ejecución inferior a 500µs.
+
+
+	Tras haber estudiado el algoritmo de Prim se deduce  para un grafo aleatorio que
+	su complejidad es t(n) = O(n^2) debido a:
+
+	-	n^1.8 corresponde a una cota ligeralmente subestimada ya que cuando n
+		tiende a infinito el valor de la funcion tiende a infinito.
+
+	-	n^2 corresponde con la cota ajustada, en el caso del vector inicializado
+		de manera ascendete tiende a 0.006 por iteracion.
+
+	-	n^2.2 corresponde a una cota ligeramente sobreestimada ya que cuando n
+		tiende a infinito el valor de la funcion tiende a 0.
+
+	Conclusion: t(n) = O(n^2)
+
+
+CONCLUSIÓN FINAL:
+	Como podemos observar el algoritmo de Prim para grafos aleatorios completos y no
+	dirigidos se ajusta a la complejidad teórica del algoritmo que es O(n^2), aunque
+	es verdad que si se hicieran pruebas con más cantidades de elementos la constante
+	a la que tiende se dispara, pero esto ya no es culpa del algoritmo, esto es culpa
+	de que estaríamos trabajando con tantos elementos que se estaría haciendo swapping
+	constantemente de los bloques de memoria y esto hace que el tiempo incremente,
+	pero con una cantidad de elementos en los que no fuera necesario hacer swapping,
+	se puede ver la progresión del algoritmo y como se ajusta perfectamente a la cota
+	teórica.
