@@ -1,4 +1,25 @@
-# java-labs: Creating the environment for Java development and Git - 2021-2022
+# Practicas de Redes de Computadores
+
+## Descripción
+Prácticas de la asignatura de Redes de Computadores, enfocadas en protocolos de red, programación de sockets y servidores web.
+
+## Lenguajes y Frameworks
+
+- **Java** - Lenguaje principal de programación
+- **Sockets TCP/UDP** - Programación de red
+- **HTTP** - Protocolo de aplicación web
+
+## Contenido
+
+- Programación con sockets TCP
+- Programación con sockets UDP
+- Implementación de servidor web HTTP
+- Cliente-servidor
+- Netcat para debugging de protocolos
+
+---
+
+# Java-labs: Creating the environment for Java development and Git - 2021-2022
 
 ## Netcat (nc)
 - Windows OS
